@@ -87,7 +87,12 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area
   .stage .desk canvas{max-width:none}
   .stage[data-zoom="2"] .desk{align-items:flex-start}
   .stage[data-zoom="2"] .desk canvas{width:190%;max-width:none;flex:none}
-  .stage .edit-wrap .fmtbar{margin:10px auto 0}
+  /* the box must not clip, or the sticky bottom bar gets stuck inside it and covers the end of the letter */
+  .stage{overflow:visible;overflow:clip}
+  #editWrap{padding-bottom:20px}
+  .stage .edit-wrap .fmtbar{margin:10px 8px 0;align-self:stretch;max-width:none;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;border-radius:14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .stage .edit-wrap .fmtbar::-webkit-scrollbar{display:none}
+  .stage .edit-wrap .fmtbar>*{flex:none}
   .edit-inner{padding:12px 6px 28px}
   .m-act{display:flex;gap:8px;position:sticky;bottom:var(--navh);z-index:5;padding:10px 12px;background:color-mix(in srgb,var(--surface-2) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line)}
   .m-act .btn{flex:0 0 auto}
