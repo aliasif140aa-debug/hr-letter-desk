@@ -37,7 +37,7 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area
 
   /* top bar: logo, save status, theme */
   header.bar{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}
-  header.bar .bar-in{flex-wrap:nowrap;padding:8px 14px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));gap:10px}
+  header.bar .bar-in{flex-wrap:nowrap;padding:18px 14px 12px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));gap:10px}
   .logo{width:104px}
 
   /* bottom tab bar, like a native app */
