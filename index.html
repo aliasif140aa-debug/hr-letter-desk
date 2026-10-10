@@ -2210,17 +2210,19 @@ function layoutSigboxes(root) {
   }
 }
 const sigPosOf = box => ({ h: +box.dataset.h || S.sigHeight, th: +box.dataset.th || S.stampHeight, sdx: +box.dataset.sdx || 0, sdy: +box.dataset.sdy || 0, tdx: box.dataset.tdx === '' ? '' : +box.dataset.tdx, tdy: box.dataset.tdy === '' ? '' : +box.dataset.tdy });
+/* how much the letter editor is shrunk on screen (1 on desktop); drags are measured on screen, positions in page millimetres */
+const vScale = box => { const p = box.closest('.paper-edit'); const w = p && p.offsetWidth; return w ? (p.getBoundingClientRect().width / w) || 1 : 1; };
 let sigDrag = null, sigSize = null;
 document.addEventListener('pointerdown', e => {
   const hd = e.target.closest('.sigbox .sig-rs'); if (!hd) return;
   e.preventDefault(); e.stopPropagation(); const box = hd.closest('.sigbox'); const k = +box.dataset.k || 3; const key = hd.dataset.kind === 'sig' ? 'h' : 'th';
   const img = box.querySelector(`img.sig-img[data-kind="${hd.dataset.kind}"]`); const ar = img && img.naturalHeight ? img.naturalWidth / img.naturalHeight : 1;
-  sigSize = { hd, box, k, key, ar, x0: e.clientX, y0: e.clientY, h0: +box.dataset[key] || (key === 'h' ? S.sigHeight : S.stampHeight) };
+  sigSize = { hd, box, k, sc: vScale(box), key, ar, x0: e.clientX, y0: e.clientY, h0: +box.dataset[key] || (key === 'h' ? S.sigHeight : S.stampHeight) };
   if (key === 'th' && box.dataset.tdx === '' && img) { box.dataset.tdx = (parseFloat(img.style.left) / k).toFixed(1); box.dataset.tdy = (parseFloat(img.style.top) / k).toFixed(1); }
   hd.setPointerCapture?.(e.pointerId); box.classList.add('resizing');
 }, true);
 document.addEventListener('pointermove', e => {
-  if (!sigSize) return; const R = sigSize; const dmm = ((e.clientY - R.y0) + (e.clientX - R.x0) / R.ar) / 2 / R.k;
+  if (!sigSize) return; const R = sigSize; const dmm = ((e.clientY - R.y0) + (e.clientX - R.x0) / R.ar) / 2 / (R.k * R.sc);
   R.box.dataset[R.key] = Math.max(6, Math.min(70, R.h0 + dmm)).toFixed(1); layoutSigboxes(R.box.closest('.paper-edit').parentElement);
 });
 document.addEventListener('pointerup', () => {
@@ -2232,12 +2234,12 @@ document.addEventListener('pointerdown', e => {
   e.preventDefault(); const box = img.closest('.sigbox'); const k = +box.dataset.k || 3;
   if (img.dataset.kind === 'stamp' && box.dataset.tdx === '') { box.dataset.tdx = (parseFloat(img.style.left) / k).toFixed(1); box.dataset.tdy = (parseFloat(img.style.top) / k).toFixed(1); }
   const px = img.dataset.kind === 'sig' ? 'sdx' : 'tdx', py = img.dataset.kind === 'sig' ? 'sdy' : 'tdy';
-  sigDrag = { img, box, k, px, py, x0: e.clientX, y0: e.clientY, dx0: +box.dataset[px] || 0, dy0: +box.dataset[py] || 0 };
+  sigDrag = { img, box, k, sc: vScale(box), px, py, x0: e.clientX, y0: e.clientY, dx0: +box.dataset[px] || 0, dy0: +box.dataset[py] || 0 };
   img.setPointerCapture?.(e.pointerId); img.classList.add('dragging');
 });
 document.addEventListener('pointermove', e => {
   if (!sigDrag) return; const D = sigDrag;
-  D.box.dataset[D.px] = (D.dx0 + (e.clientX - D.x0) / D.k).toFixed(1); D.box.dataset[D.py] = (D.dy0 + (e.clientY - D.y0) / D.k).toFixed(1);
+  D.box.dataset[D.px] = (D.dx0 + (e.clientX - D.x0) / (D.k * D.sc)).toFixed(1); D.box.dataset[D.py] = (D.dy0 + (e.clientY - D.y0) / (D.k * D.sc)).toFixed(1);
   layoutSigboxes(D.box.closest('.paper-edit').parentElement);
 });
 document.addEventListener('pointerup', () => {

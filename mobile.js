@@ -80,7 +80,27 @@
   syncDl();
   const say = t => { const el = $('#toast'); if (!el || !t) return; el.textContent = t; el.classList.add('show'); clearTimeout(say.t); say.t = setTimeout(() => el.classList.remove('show'), 4200); };
   mDls.forEach(b => b.addEventListener('click', () => { dl.click(); setTimeout(() => { const n = $('#dlNote'); if (n && /warn|err/.test(n.className)) say(n.textContent); }, 60); }));
-  $('#mZoom').addEventListener('click', () => { const z = stage.dataset.zoom === '2' ? '1' : '2'; stage.dataset.zoom = z; $('#mZoom').textContent = z === '2' ? 'Fit page' : 'Zoom in'; });
+  $('#mZoom').addEventListener('click', () => { const z = stage.dataset.zoom === '2' ? '1' : '2'; stage.dataset.zoom = z; $('#mZoom').textContent = z === '2' ? 'Fit page' : 'Zoom in'; if (typeof queueFit === 'function') queueFit(); });
+
+
+  /* ---------- edit view: show the letter at true page proportions ---------- */
+  const edit = $('#letterEditor'), editWrap = $('#editWrap'), editInner = $('.edit-inner', editWrap);
+  const PAPER_W = 740; /* the editor is built for a 740px-wide page; scale it to fit the screen */
+  function fitEditor() {
+    if (!mq.matches) { edit.style.transform = ''; edit.style.removeProperty('--s'); edit.style.removeProperty('--sinv'); editInner.style.width = editInner.style.height = ''; return; }
+    const avail = editWrap.clientWidth - 16; if (avail <= 0) return;
+    let s = Math.min(1, avail / PAPER_W);
+    if (stage.dataset.zoom === '2') s = Math.min(1, s * 2);
+    edit.style.transform = `scale(${s})`; edit.style.setProperty('--s', s); edit.style.setProperty('--sinv', (1 / s).toFixed(3));
+    editInner.style.width = Math.round(PAPER_W * s) + 'px'; editInner.style.height = Math.ceil(edit.offsetHeight * s) + 'px';
+  }
+  let fitQ = false; const queueFit = () => { if (fitQ) return; fitQ = true; requestAnimationFrame(() => { fitQ = false; fitEditor(); }); };
+  try { new ResizeObserver(queueFit).observe(edit); new ResizeObserver(queueFit).observe(editWrap); } catch {}
+  new MutationObserver(queueFit).observe(editWrap, { attributes: true, attributeFilter: ['hidden'] });
+  mq.addEventListener ? mq.addEventListener('change', queueFit) : mq.addListener(queueFit);
+  addEventListener('resize', queueFit); addEventListener('orientationchange', queueFit);
+  $('#viewSeg').addEventListener('click', () => setTimeout(queueFit, 30));
+  queueFit();
 
   /* ---------- tables → cards: give every cell its column name ---------- */
   let queued = false;

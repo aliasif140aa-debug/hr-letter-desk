@@ -15,8 +15,8 @@ button,.btn,.tabs button,.chipf,.tile,.person,.seg button,.chip,.pk,label.tog,se
 /* Chart rows in the monthly report share the class "bar" with the page header; undo the header styling on them. */
 .bars .bar{position:static;z-index:auto;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0}
 
-/* When opened from the home screen the status bar sits on top of the page: give it a brand strip. */
-body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#006D68;z-index:90;pointer-events:none}
+/* When opened from the home screen the status bar sits on top of the page: fill it with the header colour so the iPhone's see-through edge effect has nothing to blur. */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:90;pointer-events:none}
 
 /* ---------- iPad / small laptop: the 3-pane desk is too wide, so stack the preview under the form ---------- */
 @media (min-width:761px) and (max-width:1100px){
@@ -92,6 +92,15 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area
   .m-act{display:flex;gap:8px;position:sticky;bottom:var(--navh);z-index:5;padding:10px 12px;background:color-mix(in srgb,var(--surface-2) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line)}
   .m-act .btn{flex:0 0 auto}
   .m-act .mdl{flex:1 1 auto}
+
+
+  /* ----- edit view: a true miniature of the A4 page, so size and placement match the PDF ----- */
+  #editWrap{align-items:flex-start}
+  #editWrap .edit-inner{display:block;position:relative;flex:none;align-self:flex-start;padding:0;margin:12px 8px 28px}
+  #editWrap .paper-edit{position:absolute;left:0;top:0;width:740px;max-width:none;padding:48px 52px;min-height:560px;font-size:16px;transform-origin:0 0}
+  #editWrap .paper-edit .sigbox .sig-rs{width:calc(20px*var(--sinv,1));height:calc(20px*var(--sinv,1));margin:calc(-10px*var(--sinv,1)) 0 0 calc(-10px*var(--sinv,1));border-width:calc(2px*var(--sinv,1));border-radius:calc(7px*var(--sinv,1))}
+  #editWrap .paper-edit .sigbox .sig-hint{display:none}
+  #editWrap .paper-edit .sigbox .sig-tools{transform:scale(var(--sinv,1));transform-origin:right bottom;max-width:calc(100%*var(--s,1));width:max-content}
 
   /* ----- other tabs ----- */
   .tpl-layout{gap:12px}
