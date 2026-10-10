@@ -1,0 +1,159 @@
+/* =====================================================================
+   Amilla HR Letters · phone + home-screen layer
+   Loaded after the main stylesheet. Everything here is scoped to small
+   screens or touch devices, so the desktop layout is left as it was.
+   ===================================================================== */
+
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent}
+button,.btn,.tabs button,.chipf,.tile,.person,.seg button,.chip,.pk,label.tog,select,summary{touch-action:manipulation}
+.btn,.tabs button,.chipf,.seg button,.icon-btn,.save-pill,.data-pill{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+/* things that only exist on phones stay hidden on desktop */
+.ti,.mstep,.m-act{display:none}
+
+/* Chart rows in the monthly report share the class "bar" with the page header; undo the header styling on them. */
+.bars .bar{position:static;z-index:auto;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0}
+
+/* When opened from the home screen the status bar sits on top of the page: give it a brand strip. */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#006D68;z-index:90;pointer-events:none}
+
+/* ---------- iPad / small laptop: the 3-pane desk is too wide, so stack the preview under the form ---------- */
+@media (min-width:761px) and (max-width:1100px){
+  header.bar .bar-in{flex-wrap:wrap;row-gap:8px}
+  .tabs{order:3;width:100%;margin:0;overflow-x:auto}
+  .tabs button{flex:1;justify-content:center}
+  .page-head{flex-wrap:wrap}
+  .gen{min-width:0;grid-template-columns:minmax(220px,300px) minmax(0,1fr);grid-template-areas:"staff work" "stage stage"}
+  .stage{position:relative;top:auto;height:auto;min-height:0}
+  .stage .desk{max-height:80vh}
+  .staff-pane{top:70px;max-height:calc(100vh - 90px)}
+}
+
+/* ---------- phones ---------- */
+@media (max-width:760px){
+  :root{--navh:calc(60px + env(safe-area-inset-bottom,0px))}
+  body{margin:0;padding-bottom:calc(var(--navh) + 10px)}
+
+  /* top bar: logo, save status, theme */
+  header.bar{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}
+  header.bar .bar-in{flex-wrap:nowrap;padding:8px 14px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));gap:10px}
+  .logo{width:104px}
+
+  /* bottom tab bar, like a native app */
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;width:auto;order:0;margin:0;border:0;border-top:1px solid var(--line);border-radius:0;
+    padding:6px max(6px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left));gap:2px;overflow:visible;
+    background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px)}
+  .tabs button{flex:1 1 0;min-width:0;flex-direction:column;gap:3px;padding:6px 2px 5px;border-radius:12px;font-size:10.5px;font-weight:700;position:relative;justify-content:center}
+  .tabs button[aria-selected="true"]{background:var(--teal-soft);color:var(--teal);box-shadow:none}
+  .tabs .ti{display:block;line-height:0}
+  .tabs .count{position:absolute;top:1px;left:calc(50% + 4px);font-size:10px;min-width:16px;padding:0 4px;line-height:15px}
+
+  main{padding-inline:max(14px,env(safe-area-inset-left)) max(14px,env(safe-area-inset-right));padding-block:12px 24px}
+  .page-head{margin:2px 0 16px}
+  .page-head .right{margin-left:0;width:100%}
+
+  .toast{bottom:calc(var(--navh) + 12px)}
+
+  /* ----- Generate: three steps instead of one very long page ----- */
+  #tab-generate .mstep{display:flex;gap:4px;padding:4px;margin:0 0 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;
+    position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,56px) + 8px);z-index:30;box-shadow:var(--sh-1)}
+  .mstep button{flex:1;border:0;background:transparent;border-radius:999px;padding:9px 6px;font-weight:700;font-size:13.5px;color:var(--muted);cursor:pointer;display:inline-flex;gap:7px;align-items:center;justify-content:center}
+  .mstep button b{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:var(--surface-3);color:var(--muted)}
+  .mstep button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1),0 0 0 1px var(--line)}
+  .mstep button[aria-selected="true"] b{background:var(--teal);color:var(--teal-ink)}
+
+  .gen{position:relative}
+  /* hidden steps keep their real width (so the letter still lays out correctly) but take no room */
+  .gen[data-m="staff"] .work-pane,.gen[data-m="staff"] .stage,
+  .gen[data-m="letter"] .staff-pane,.gen[data-m="letter"] .stage,
+  .gen[data-m="preview"] .staff-pane,.gen[data-m="preview"] .work-pane{position:absolute!important;left:0;right:0;top:0;height:0!important;min-height:0!important;overflow:hidden!important;visibility:hidden;pointer-events:none;border:0;margin:0;padding:0}
+
+  .staff-pane .list{max-height:calc(100dvh - var(--hdrh,56px) - var(--navh) - 285px);min-height:240px}
+  .person{padding:10px 8px;min-height:54px}
+  .staff-foot{padding-bottom:14px}
+
+  .cta{position:static;padding:12px 14px 16px;border-radius:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .cta #dlBtn,.cta #dlNote:not(.err):not(.warn):not(.ok){display:none}
+  .btn.xl{padding:15px 20px}
+  .sec{padding:16px 16px}
+  .profile{padding:18px 16px 16px}
+  .form{grid-template-columns:minmax(0,1fr)}
+
+  /* ----- preview step ----- */
+  .stage{border-radius:var(--r-xl)}
+  .stage-bar{position:static;transform:none;margin:10px 10px 0;padding:8px 10px;flex-wrap:wrap;justify-content:center;border-radius:16px;row-gap:6px;box-shadow:var(--sh-1)}
+  .stage .desk{padding:12px 10px 16px;max-height:none;overflow-x:auto}
+  .stage .desk canvas{max-width:none}
+  .stage[data-zoom="2"] .desk{align-items:flex-start}
+  .stage[data-zoom="2"] .desk canvas{width:190%;max-width:none;flex:none}
+  .stage .edit-wrap .fmtbar{margin:10px auto 0}
+  .edit-inner{padding:12px 6px 28px}
+  .m-act{display:flex;gap:8px;position:sticky;bottom:var(--navh);z-index:5;padding:10px 12px;background:color-mix(in srgb,var(--surface-2) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line)}
+  .m-act .btn{flex:0 0 auto}
+  .m-act .mdl{flex:1 1 auto}
+
+  /* ----- other tabs ----- */
+  .tpl-layout{gap:12px}
+  .tpl-list{max-height:220px;overflow:auto}
+  .editor-top .f{flex:1 1 100%!important}
+  .editor-top .right{margin-left:0;width:100%}
+  .card{padding:16px}
+  .tablewrap{border-radius:var(--r-lg)}
+  .log-tools .lsearch{flex:1 1 100%}
+  .up-tools{gap:8px 14px}
+  .rtop .f{min-width:0;flex:1 1 100%}
+
+  /* long tables become one card per row (labels are added by mobile.js) */
+  table.log,table.log tbody{display:block;width:100%}
+  table.log thead{display:none}
+  table.log tr{display:grid;gap:5px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  table.log tr:last-child{border-bottom:0}
+  table.log td{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:0;border:0;white-space:normal;text-align:right;min-width:0}
+  table.log td::before{content:attr(data-l);flex:none;color:var(--faint);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;text-align:left}
+  table.log td:not([data-l])::before{display:none}
+  table.log tbody tr:hover td{background:none}
+  table.log td.acts{justify-content:flex-end;flex-wrap:wrap;padding-top:4px}
+
+  /* sheets, not centred dialogs */
+  .modal{padding:0;padding-top:env(safe-area-inset-top,0px);align-items:end;justify-items:stretch}
+  .modal-card,.modal-card.wide{width:100%;max-height:calc(100dvh - env(safe-area-inset-top,0px) - 10px);border-radius:20px 20px 0 0;border-bottom:0}
+  .modal-h{padding:14px 16px}
+  .modal-b{padding:14px 16px}
+  .modal-f{padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+  .modal-f .btn{flex:1 1 auto}
+  .modal-f .note{flex:1 1 100%;margin-right:0}
+  .btable{max-height:50vh}
+}
+
+@media (max-width:430px){
+  .brand .app{display:none}
+  .page-head h1{font-size:24px}
+}
+
+/* ---------- touch screens: bigger targets, and 16px text so iOS does not zoom when you tap a box ---------- */
+@media (pointer:coarse){
+  input,select,textarea,.inp,.search input,.st-sel,.fmtbar select{font-size:16px!important}
+  .paper-edit{font-size:16px}
+  .btn{min-height:42px}
+  .btn.sm{min-height:36px}
+  .chipf{padding:8px 14px}
+  .chip{padding:6px 12px}
+  .icon-btn{width:40px;height:40px}
+  .fmtbar button,.fmtbar select{min-width:38px;height:38px}
+  .tog input{width:38px;height:22px}
+  .tog input::after{width:18px;height:18px}
+  .tog input:checked::after{transform:translateX(16px)}
+  .seg button{padding:8px 14px}
+  .tile{padding-block:12px}
+  .pk{padding:12px}
+  input[type=checkbox],input[type=radio]{width:20px;height:20px}
+}
+/* no mouse: show the signature / stamp tools without waiting for a hover */
+@media (hover:none){
+  .paper-edit .sigbox .sig-tools{display:flex}
+}
+@media (prefers-reduced-motion:reduce){.m-act,.mstep{transition:none}}
+
+/* wide tables scroll inside their box and never stretch the page (matters on iPad) */
+.tablewrap{contain:layout paint}
