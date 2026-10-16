@@ -2966,6 +2966,14 @@ async function init() {
   if (st.sample && !st.P) st.P = st.people.find(p => p.id === '1675') || null;
   renderAll();
   const h = (location.hash || '').slice(1); if (['templates', 'setup', 'log', 'upcoming'].includes(h)) showTab(h); setBarH();
+  /* opened from Contract Desk: #letter=<template id>&emp=<staff id> */
+  try {
+    const hp = new URLSearchParams(h.includes('=') ? h : '');
+    const wantTpl = hp.get('letter'), wantEmp = hp.get('emp');
+    if (wantTpl && templates.some(t => t.id === wantTpl)) { st.tplId = wantTpl; st.signer = tplSigner(curTpl()); renderTplGrid(); renderDetails(); fillLetter(); }
+    if (wantEmp) { const P = st.byId.get(idKey(wantEmp)); if (P) selectPerson(P); else toast('Staff ID ' + wantEmp + ' is not in the staff list. Load the latest staff Excel first.'); }
+    if (wantTpl || wantEmp) history.replaceState(null, '', location.pathname + location.search);
+  } catch (e) { console.warn('deep link', e); }
   if (!window.PDFLib) toast('The PDF tool did not load. Check the internet connection and reload.');
 }
 window.__hl = { importAoa: async (aoa, name) => { const r = await importAoa(aoa, name); rebuildPeople(); renderAll(); return r; }, st, select: id => selectPerson(st.byId.get(idKey(id))), setInputs: o => { Object.assign(st.inputs, o); renderDetails(); fillLetter(); }, setTpl: id => { st.tplId = id; st.signer = tplSigner(curTpl()); renderTplGrid(); renderDetails(); fillLetter(); }, buildPdf, layoutLetter, blocksFromHtml, templates: () => templates };

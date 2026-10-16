@@ -2,7 +2,7 @@
    Shows the saved copy straight away and quietly fetches a fresh one, so a new version
    arrives the next time you open the app. Your staff data and letters live in the phone's
    own storage and are never touched by this file. Bump VERSION to force a clean reload. */
-const VERSION = 'v5';
+const VERSION = 'v6';
 const CACHE = 'hr-letters-' + VERSION;
 const CORE = [
   './', 'index.html', 'manifest.webmanifest', 'mobile.css', 'mobile.js', 'pwa.js',
