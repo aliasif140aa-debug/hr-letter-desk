@@ -171,3 +171,22 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area
 
 /* wide tables scroll inside their box and never stretch the page (matters on iPad) */
 .tablewrap{contain:layout paint}
+
+/* ----- nudge arrows + send row ----- */
+@media (max-width:760px){
+  .m-act{flex-wrap:wrap}
+  .m-row{flex:1 0 100%;display:flex;gap:8px;align-items:center}
+  .m-row[hidden]{display:none}
+  .m-nudge{justify-content:space-between;gap:6px}
+  .m-nudge .nseg{display:flex;flex:none;border:1px solid var(--line-strong);border-radius:12px;overflow:hidden}
+  .m-nudge .nseg button{border:0;background:var(--surface);color:var(--fg);font:600 13px/1 var(--f-ui);padding:0 10px;height:40px}
+  .m-nudge .nseg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+  .m-nudge .nseg button:disabled{opacity:.35}
+  .m-nudge .npad{display:flex;gap:5px;flex:none}
+  .m-nudge .narr{width:38px;height:40px;display:grid;place-items:center;border:1px solid var(--line-strong);background:var(--surface);color:var(--fg);border-radius:12px;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;padding:0}
+  .m-nudge .narr:active{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .m-nudge .nstep{flex:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--fg);border-radius:12px;height:40px;padding:0 8px;font:600 12px/1 var(--f-ui);white-space:nowrap}
+  .m-send .sendgo{flex:1 1 auto;background:#128C7E;border-color:#128C7E;color:#fff;font-weight:700}
+  .m-send .wa{flex:none}
+  #letterEditor img.sig-img.nsel{outline:2px dashed var(--teal);outline-offset:2px}
+}
