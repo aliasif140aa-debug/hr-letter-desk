@@ -1,0 +1,33 @@
+/* Amilla HR Letters · small phone extras on top of the page's own layout. */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:90;pointer-events:none}
+body{padding-bottom:env(safe-area-inset-bottom,0px)}
+
+/* arrows for moving the signature / stamp (shown on touch screens in Edit text) */
+.cl-nudge{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;gap:6px;align-items:center;padding:8px;border-radius:18px;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line-strong);box-shadow:var(--sh-2);max-width:calc(100vw - 16px)}
+.cl-nudge[hidden]{display:none}
+body.has-nudge{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.cl-nudge .nseg{display:flex;flex:none;border:1px solid var(--line-strong);border-radius:12px;overflow:hidden}
+.cl-nudge .nseg button{border:0;background:var(--surface);color:var(--fg);font:600 13px/1 var(--f-ui);padding:0 11px;height:42px}
+.cl-nudge .nseg button[aria-pressed="true"]{background:var(--teal);color:var(--teal-ink)}
+.cl-nudge .nseg button:disabled{opacity:.35}
+.cl-nudge .npad{display:flex;gap:5px;flex:none}
+.cl-nudge .narr{width:40px;height:42px;display:grid;place-items:center;border:1px solid var(--line-strong);background:var(--surface);color:var(--fg);border-radius:12px;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;padding:0}
+.cl-nudge .narr:active{background:var(--teal);color:var(--teal-ink);border-color:var(--teal)}
+.cl-nudge .nstep{flex:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--fg);border-radius:12px;height:42px;padding:0 9px;font:600 12px/1 var(--f-ui);white-space:nowrap}
+#letterEditor img.sig-img.nsel{outline:2px dashed var(--teal);outline-offset:2px}
+
+/* send the saved PDF */
+.cl-send{display:flex;gap:8px;margin-top:10px}
+.cl-send[hidden]{display:none}
+.cl-send .sendgo{flex:1 1 auto;background:#128C7E;border-color:#128C7E;color:#fff;font-weight:700}
+.cl-send .wa{flex:none}
+
+@media (max-width:760px){
+  .qs-btn{padding:0;width:38px;height:38px;justify-content:center;flex:none}
+  .pal-ov{padding:calc(env(safe-area-inset-top,0px) + 12px) 10px 10px}
+  .pal-in kbd,.pal-f{display:none}
+  .pal-list{max-height:calc(100dvh - 190px)}
+  .pal-list li{padding:11px 10px}
+  .sp-center{padding-top:env(safe-area-inset-top,0px)}
+  .toast.has-undo{max-width:calc(100vw - 24px)}
+}
